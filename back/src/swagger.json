@@ -1,0 +1,659 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Reviews on Tap",
+    "description": "A simple API to allow creating and finding root beer drinks, review them and add pictures.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "drinks",
+      "description": "Root beer drinks"
+    },
+    {
+      "name": "pictures",
+      "description": "Pictures of root beer drinks"
+    },
+    {
+      "name": "reviews",
+      "description": "Reviews of root beer drinks"
+    }
+  ],
+  "paths": {
+    "/drinks": {
+      "post": {
+        "tags": ["drinks"],
+        "summary": "Add a new drink",
+        "requestBody": {
+          "description": "Create a new drink",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Drink"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DrinkResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["drinks"],
+        "summary": "Finds drinks",
+        "description": "Multiple status values can be provided with comma separated strings",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The offset to start returning results from",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "length",
+            "in": "query",
+            "description": "The number of drinks to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Used to filter on the name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "Used to filter on the description",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Used to sort by a specific field",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "desc",
+            "in": "query",
+            "description": "Should the sort be descending?",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "minRating",
+            "in": "query",
+            "description": "Filter by minimum (gte) average rating",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "maxRating",
+            "in": "query",
+            "description": "Filter by maximum (lte) average rating",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaginatedDrinkResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drinks/{drinkId}": {
+      "put": {
+        "tags": ["drinks"],
+        "summary": "Update an existing drink",
+        "description": "Update an existing drink by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update an existent drink",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Drink"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DrinkResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["drinks"],
+        "summary": "Delete an existing drink",
+        "description": "Delete an existing drink by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/drinks/{drinkId}/pictures": {
+      "post": {
+        "tags": ["pictures"],
+        "summary": "Post a picture of an existing drink",
+        "description": "Post a picture of an existing drink by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Upload an image",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PictureResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["pictures"],
+        "summary": "Get all pictures of an existing drink",
+        "description": "Get all pictures of an existing drink by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PictureArrayResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drinks/{drinkId}/pictures/{pictureId}": {
+      "delete": {
+        "tags": ["pictures"],
+        "summary": "Delete an existing picture",
+        "description": "Delete an existing picture by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pictureId",
+            "in": "path",
+            "description": "ID of picture to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/drinks/{drinkId}/reviews": {
+      "post": {
+        "tags": ["reviews"],
+        "summary": "Post a review of an existing drink",
+        "description": "Post a review of an existing drink by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Create a review",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["reviews"],
+        "summary": "Get all reviews of an existing drink",
+        "description": "Get all reviews of an existing drink by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The offset to start returning results from",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "length",
+            "in": "query",
+            "description": "The number of drinks to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drinks/{drinkId}/reviews/{reviewId}": {
+      "put": {
+        "tags": ["reviews"],
+        "summary": "Update an existing review",
+        "description": "Update an existing review by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "ID of review to update",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update an existent review",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["reviews"],
+        "summary": "Delete an existing review",
+        "description": "Delete an existing review by Id",
+        "parameters": [
+          {
+            "name": "drinkId",
+            "in": "path",
+            "description": "ID of drink",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "ID of review to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Drink": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "Picture": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        }
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "user_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          }
+        }
+      },
+      "ReviewResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "user_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PictureResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DrinkResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewCount": {
+            "type": "integer"
+          },
+          "reviewAverageRating": {
+            "type": "integer"
+          },
+          "Pictures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PictureResponse"
+            }
+          }
+        }
+      },
+      "PictureArrayResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PictureResponse"
+        }
+      },
+      "PaginatedDrinkResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DrinkResponse"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "PaginatedReviewResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewResponse"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
