@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import fileUpload from "express-fileupload";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
@@ -11,6 +12,7 @@ const port = 4000;
 console.log(__dirname);
 
 app.use(express.static(__dirname + "/public"));
+app.use(cors());
 app.use(express.json());
 app.use(
   fileUpload({
