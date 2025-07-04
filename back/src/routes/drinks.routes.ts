@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
-import { Drink, Picture, Review } from "../db/drinks.db";
+import path from "path";
+import { Drink, Picture, Review } from "../db/database";
 import sequelize, { Op } from "sequelize";
 
 const router = Router();
 
 router.get("/drinks", async (req: Request, res: Response) => {
   try {
-    const offset = Number(req.query["offset"]);
-    const length = Number(req.query["length"]);
+    const offset = Number(req.query["offset"]) || 0;
+    const length = Number(req.query["length"]) || 20;
 
     const where: sequelize.WhereOptions = {};
 
@@ -209,8 +210,8 @@ router.delete("/drinks/:drinkId", async (req: Request, res: Response) => {
 
 router.get("/drinks/:drinkId/reviews", async (req: Request, res: Response) => {
   try {
-    const offset = Number(req.query["offset"]);
-    const length = Number(req.query["length"]);
+    const offset = Number(req.query["offset"]) || 0;
+    const length = Number(req.query["length"]) || 10;
 
     const drinkId = req.params["drinkId"];
     const { count, rows } = await Review.findAndCountAll({
@@ -289,29 +290,37 @@ router.post(
       const drinkId = req.params["drinkId"];
       const drink = await Drink.findByPk(drinkId);
 
-      // @ts-ignore: files
+      if (!drink) {
+        return res.status(404).send("Drink not found.");
+      }
+
       if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send("No files were uploaded.");
       }
 
-      console.log(req.files.file);
-      console.log(req.files.file);
       const file = Array.isArray(req.files.file)
         ? req.files.file[0]
         : req.files.file;
 
-      const staticRoot = __dirname + "/../public/";
-      const path = "files/" + drinkId + "/" + file.name;
-      file.mv(staticRoot + path, async (err) => {
+      const fileExtension = path.extname(file.name);
+      const newFileName = `${Date.now()}${fileExtension}`;
+      const newPath = `files/${drinkId}/${newFileName}`;
+
+      const staticRoot = path.resolve(__dirname, "../../public/");
+
+      console.log("Attempting to save file to:", staticRoot + newPath);
+
+      file.mv(path.join(staticRoot, newPath), async (err) => {
         if (err) {
+          console.error("File move error:", err);
           return res.status(500).send(err);
         }
 
-        // @ts-ignore: sequelize doesn't have great typescript support :(
-        const picture = await drink?.createPicture({
-          name: file.name,
-          path,
+        const picture = await Picture.create({
+          name: newFileName,
+          path: newPath,
           mimetype: file.mimetype,
+          DrinkId: drink.get("id"),
         });
 
         return res.json(picture);

@@ -1,0 +1,108 @@
+.dashboard-container {
+  width: 100%;
+  padding: 1rem 2rem;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #444;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 3.2rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.dashboard-header p {
+  margin: 0.5rem 0 1.5rem;
+  font-size: 1.2rem;
+  color: #bbb;
+}
+
+.add-link-button {
+  background: linear-gradient(45deg, #646cff, #787eff);
+  color: white;
+  padding: 0.8rem 1.6rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.add-link-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-main {
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding-top: 1rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loader {
+  border: 5px solid #333;
+  border-top: 5px solid #646cff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 4rem auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.info-message-container {
+  text-align: center;
+  margin-top: 4rem;
+  padding: 3rem;
+  background-color: rgba(42, 42, 42, 0.5);
+  border-radius: 12px;
+  border: 1px dashed #555;
+}
+
+.info-message-container p {
+  font-size: 1.2rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.error-message {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 1.2rem;
+  color: #ffc4c4;
+  background-color: rgba(255, 138, 138, 0.1);
+  border: 1px solid #ff8a8a;
+  padding: 2rem;
+  border-radius: 8px;
+}

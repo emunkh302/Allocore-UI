@@ -1,0 +1,22 @@
+.add-review-form {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+}
+
+.add-review-form h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  color: #eee;
+}
+
+.form-error {
+  color: #ff8a8a;
+  background-color: #4d2323;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}

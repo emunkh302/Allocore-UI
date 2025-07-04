@@ -1,0 +1,116 @@
+.review-list {
+  margin-top: 3rem;
+  border-top: 1px solid #444;
+  padding-top: 2rem;
+}
+
+.review-list h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.review-item {
+  position: relative;
+  background-color: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #3a3a3a;
+}
+
+.review-text {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #f0f0f0;
+  margin: 0 0 1rem 0;
+  padding-right: 6rem;
+}
+
+.review-footer {
+  text-align: right;
+}
+
+.review-rating {
+  color: #ffc700;
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.review-author {
+  color: #bbb;
+}
+
+.review-actions {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.edit-review-button {
+  background: none;
+  border: 1px solid #555;
+  color: #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  transition: background-color 0.2s;
+}
+
+.delete-review-button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.review-item:hover .delete-review-button {
+  opacity: 1;
+}
+.delete-review-button:hover {
+  color: #ff8a8a;
+}
+.edit-review-button:hover {
+  background-color: #444;
+}
+
+.edit-review-form textarea {
+  width: 100%;
+  min-height: 80px;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  background-color: #333;
+  color: #eee;
+  border: 1px solid #555;
+}
+
+.edit-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-form-actions button {
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.edit-form-actions button[type="submit"] {
+  background-color: #646cff;
+  color: white;
+}
+
+.edit-form-actions button[type="button"] {
+  background-color: #555;
+  color: white;
+  margin-left: 0.5rem;
+}
